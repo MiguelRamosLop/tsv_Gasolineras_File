@@ -51,6 +51,9 @@ void gasolinaCPMenor(gasolinera *lista, string provincia, string municipio, stri
 void gasolinaCPMayor(gasolinera *lista, string provincia, string municipio, string localidad);
 void gasolinaPlace(gasolinera *lista, string provincia, string municipio, string localidad);
 void gasolinaRepsol(gasolinera *lista, string provincia, string municipio, string localidad);
+void direccionDosPrimeras (gasolinera *lista, string localidad);
+void gasolinasProxCalleToledo (gasolinera *lista);
+void triangularGasolinerasCodigoPostal(gasolinera *lista, int codigopostal);
 
 
 void readFile(gasolinera *&lista){
@@ -71,6 +74,8 @@ void readFile(gasolinera *&lista){
                 lista = actual;
                 actual->next = NULL;
             }else{
+                //lista->next=actual;
+                //actual = lista;
                 actual->next = lista;
                 lista = actual;
             }
@@ -82,8 +87,6 @@ void readFile(gasolinera *&lista){
             cout << "El archivo se leyo con exito";
         } if (opt == 2) {
             salida << "El archivo se leyo con exito";
-        } else {
-            cout << "Ocurrio un error.";
         }
         //Si el archivo no se puede leer, salta la excepción
     }catch(...){
@@ -108,8 +111,6 @@ void searchMunicipiosProv(gasolinera *lista, string provincia) {
         cout << "La provincia de " << provincia << " tiene " << contadorMunicipiosProv << " municipios.";
     } if (opt == 2) {
         salida << "La provincia de " << provincia << " tiene " << contadorMunicipiosProv << " municipios.";
-    } else {
-        cout << "Ocurrio un error.";
     }
 
 }
@@ -135,8 +136,6 @@ void printMunicipiosProv(gasolinera *lista, string provincia) {
             }
             guia = guia->next;
         } while (guia != NULL);
-    } else {
-        cout << "Ocurrio un error.";
     }
 }
 
@@ -160,8 +159,6 @@ void EGasofaProv(gasolinera *lista, string provincia, string municipio, string l
     } if (opt == 2) {
         salida << "En " << localidad << " ," << municipio << " ," << provincia << " existen " << contadorGasofasProv << " gasolineras disponibles." << endl;
         salida << "La media de precios de gasolina95E5 es de: " << e/contadorGasofasProv;
-    } else {
-        cout << "Ocurrio un error.";
     }
 
 }
@@ -184,8 +181,6 @@ void gasolinaMasCara(gasolinera *lista, string provincia, string municipio, stri
         cout << "En " << localidad << " ," << municipio << " ," << provincia << " la gasolina95E5 mas cara esta a " << precio << endl;
     } if (opt == 2) {
         salida << "En " << localidad << " ," << municipio << " ," << provincia << " la gasolina95E5 mas cara esta a " << precio << endl;
-    } else {
-        cout << "Ocurrio un error.";
     }
 }
 
@@ -207,8 +202,6 @@ void gasolinaMasCheap(gasolinera *lista, string provincia, string municipio, str
         cout << "En " << localidad << " ," << municipio << " ," << provincia << " la gasolina95E5 mas barata esta a " << precio << endl;
     } if (opt == 2) {
         salida << "En " << localidad << " ," << municipio << " ," << provincia << " la gasolina95E5 mas barata esta a " << precio << endl;
-    } else {
-        cout << "Ocurrio un error.";
     }
 
 }
@@ -231,8 +224,6 @@ void gasolinaCPMenor(gasolinera *lista, string provincia, string municipio, stri
         cout << "En " << localidad << " ," << municipio << " ," << provincia << " la gasolinera con codPostal mas barato es el " << codigoPostalMenor << endl;
     } if (opt == 2) {
         salida << "En " << localidad << " ," << municipio << " ," << provincia << " la gasolinera con codPostal mas barato es el " << codigoPostalMenor << endl;
-    } else {
-        cout << "Ocurrio un error.";
     }
 }
 
@@ -254,8 +245,6 @@ void gasolinaCPMayor(gasolinera *lista, string provincia, string municipio, stri
         cout << "En " << localidad << " ," << municipio << " ," << provincia << " la gasolinera con codPostal mas barato es el " << codigoPostalMayor << endl;
     } if (opt == 2) {
         salida << "En " << localidad << " ," << municipio << " ," << provincia << " la gasolinera con codPostal mas barato es el " << codigoPostalMayor << endl;
-    } else {
-        cout << "Ocurrio un error.";
     }
 }
 
@@ -280,8 +269,6 @@ void gasolinaPlace(gasolinera *lista, string provincia, string municipio, string
             }
             guia = guia -> next;
         } while (guia != NULL);
-    } else {
-        cout << "Ocurrio un error.";
     }
 }
 
@@ -303,18 +290,59 @@ void gasolinaRepsol(gasolinera *lista, string provincia, string municipio, strin
         cout << "Existen " << contadorRepsoles  << " en: " << localidad << " ," << municipio << " ," << provincia;
     } if (opt == 2) {
         salida << "Existen " << contadorRepsoles  << " en: " << localidad << " ," << municipio << " ," << provincia;
-    } else {
-        cout << "Ocurrio un error.";
     }
+}
+
+void direccionDosPrimeras (gasolinera *lista, string localidad) {
+    int contador = 0;
+
+    do {
+        if (lista -> localidad == localidad) {
+            contador++;
+            cout << lista -> direccion;
+        }
+        if (contador == 2) {
+            return;
+        }
+        lista = lista -> next;
+    } while(lista != NULL);
+}
+
+void gasolinasProxCalleToledo (gasolinera *lista) {
+    gasolinera *guide = new gasolinera();
+    guide = lista;
+    int contador = 0;
+    float lat = 40.40831082064327 + 0.000001;
+    float lat2 = 40.40831082064327 - 0.000001;
+    float lon = -3.7110372156691955 - 0.000001;
+    float lon2 = -3.7110372156691955 + 0.000001;
+
+    do {
+        if (lat2 <= guide -> latitud  && guide -> latitud >= lat ) {
+            if (lon2 <= guide -> longitud  && guide -> longitud >= lon ) {
+                cout << guide -> direccion << endl;
+                contador++;
+            }
+        }
+        if (contador == 5) {
+            return;
+        }
+        guide = guide -> next;
+    } while (guide != NULL);
+}
+
+void triangularGasolinerasCodigoPostal(gasolinera *lista, int codigopostal) {
+
 }
 
 int main() {
     gasolinera *iList = NULL;
     string prov, mun, loc, gas;
-    int input, inputS;
+    int input, inputS, codPos;
     cout << "Leyendo archivo...\n";
     salida << "Leyendo archivo...\n";
     readFile (iList);
+    cout << iList -> provincia;
     do {
         cout << endl;
         cout << "\n|-------------------------------------|";
@@ -329,7 +357,10 @@ int main() {
         cout << "\n| 7. Codigo postal mayor              |";
         cout << "\n| 8. Gasolinas de un sitio            |";
         cout << "\n| 9. Gasolineras repsol               |";
-        cout << "\n| 10. Salir                           |";
+        cout << "\n| 10. Direccion dos primeras          |";
+        cout << "\n| 11. Gasolinas prox calle Toledo 98  |";
+        cout << "\n| 12. Triangular gasolineras cerca cp |";
+        cout << "\n| 13. Salir                           |";
         cout << "\n|------------------|------------------|";
         cout << "\n\n Escoja una Opcion: ";
         cin >> input;
@@ -408,11 +439,25 @@ int main() {
                 gasolinaRepsol(iList,prov,mun,loc);
                 break;
             case 10:
+                cout << "Ingrese localidad: ";
+                cin >> loc;
+                direccionDosPrimeras(iList,loc);
+                break;
+            case 11:
+                //40.40831082064327, -3.7110372156691955
+                gasolinasProxCalleToledo (iList);
+                break;
+            case 12:
+                cout << "Ingrese codigo postal: ";
+                cin >> codPos;
+                triangularGasolinerasCodigoPostal(iList, codPos);
+                break;
+            case 13:
                 cout << "Programa finalizado.";
                 break;
             default:
                 cout << "A problem ocurred";
                 break;
         }
-    } while (input != 10);
+    } while (input != 13);
 }
