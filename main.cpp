@@ -332,7 +332,15 @@ void gasolinasProxCalleToledo (gasolinera *lista) {
 }
 
 void triangularGasolinerasCodigoPostal(gasolinera *lista, int codigopostal) {
-
+    gasolinera *guide = new gasolinera();
+    guide = lista;
+    cout << "las gasolineras que se encuentran dentro del codigo postal " <<codigopostal<< " son: " << endl;
+    do {
+        if (guide -> codigoPostal == codigopostal) {
+            cout << guide -> direccion << endl;
+        }
+        guide = guide -> next;
+    } while (guide != NULL);
 }
 
 int main() {
