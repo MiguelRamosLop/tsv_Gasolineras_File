@@ -41,7 +41,7 @@ struct gasolinera {
 ofstream salida ("../gasolineras_data.txt");
 
 //Función para crear la lista con los datos del archivo
-void readFile(gasolinera *&lista);
+void readFile(gasolinera *&lista, gasolinera *&final);
 void searchMunicipiosProv(gasolinera *lista, string provincia);
 void printMunicipiosProv(gasolinera *lista, string provincia);
 void EGasofaProv(gasolinera *lista, string provincia, string municipio, string localidad);
@@ -56,7 +56,7 @@ void gasolinasProxCalleToledo (gasolinera *lista);
 void triangularGasolinerasCodigoPostal(gasolinera *lista, int codigopostal);
 
 
-void readFile(gasolinera *&lista){
+void readFile(gasolinera *&lista, gasolinera *&final){
     //Indicamos al programa la dirección del archivo que tiene que leer
     ifstream read("../hoja_modificada_UK.tsv");
     try{
@@ -70,14 +70,17 @@ void readFile(gasolinera *&lista){
                  actual->precioGasesLicuados>> actual->precioGasNaturalComprimido>> actual->precioGasNaturalLicuado>> actual->precioHidrogeno>> actual->rotulo>>
                  actual->tipoVenta>> actual->rem>> actual->horario>> actual->tipoServicio;
             //Una vez leído el fichero añadimos el nodo a la lista
-            if (lista==NULL){
-                lista = actual;
+            if (lista==NULL){  //  LISTA-ACTUAL-FINAL -> NULL
                 actual->next = NULL;
-            }else{
+                lista = actual;
+                final = actual;
+            }else{ // lista -> nodo -> final -> NULL
                 //lista->next=actual;
                 //actual = lista;
-                actual->next = lista;
-                lista = actual;
+                final -> next = actual;
+                final = actual;
+                //actual->next = lista;
+                //lista = actual;
             }
         }
         int opt;
@@ -345,11 +348,12 @@ void triangularGasolinerasCodigoPostal(gasolinera *lista, int codigopostal) {
 
 int main() {
     gasolinera *iList = NULL;
+    gasolinera *iFinal = NULL;
     string prov, mun, loc, gas;
     int input, inputS, codPos;
     cout << "Leyendo archivo...\n";
     salida << "Leyendo archivo...\n";
-    readFile (iList);
+    readFile (iList, iFinal);
     cout << iList -> provincia;
     do {
         cout << endl;
